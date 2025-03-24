@@ -1,0 +1,255 @@
+---
+title: "Practice 4 HW"
+output: html_document
+date: "2025-03-24"
+---
+Ищкшы
+
+```{r}
+library(tidyverse)
+library(rstatix)
+library(effsize)
+library(psych) 
+library(car)
+library(DescTools) 
+library(sjstats)
+```
+
+
+```{r}
+data <- read.csv('Medinfo.csv', sep=";")
+```
+
+
+Do people from different regions have different levels of health anxiety?
+
+Now let's filter the data so it is easier to analyze. We will create a subset
+ 
+```{r}
+subset <- data %>%
+  select(OUTPUT.reg, total_hecons)
+```
+ 
+ 
+```{r}
+str(subset)
+```
+ 
+ We need to change the region variable into the factor so it can be analyzed.
+ 
+```{r}
+subset <- rename(subset, "region" = "OUTPUT.reg")
+```
+ 
+```{r}
+subset$region <- as.factor(subset$region)
+```
+
+```{r}
+levels(subset$region)
+```
+
+
+Returning to the question, it can be seen that we need to see the differences between the 10 groups. For this ANOVA test or its non-parametric alternative can be used.
+
+
+Do people from different regions have different levels of health anxiety?
+
+H1: There is a difference in levels of healthy anxiety between the people from different regions
+H0: There is no difference in levels of healthy anxiety between the people from different regions
+
+```{r}
+ggplot(data = subset, aes(x = region, y = total_hecons))+
+  geom_boxplot()
+```
+It can be seen from the boxplots that there seems to be the difference of total_hecons between the groups of regions.
+
+It can be seen from the boxplot that there are some outliers that needs to be removed
+
+Let's look at the histogram
+
+```{r}
+hist(subset$total_hecons)
+```
+
+The distribution seems to be normal6 though there are some outliers in the left tail.
+
+We will delete the outliers, using the Z-score. We will remove the data that exceeds 3 std.
+
+```{r}
+z_score = scale(subset$total_hecons)
+```
+
+```{r}
+describe(z_score)
+```
+```{r}
+drop_outliers <- subset$total_hecons[which(z_score < -3)]
+subset_clean <- subset[!(subset$total_hecons %in% drop_outliers), ]
+```
+
+
+Now let's look at the boxplot of clean data
+
+```{r}
+ggplot(data = subset_clean, aes(x = region, y = total_hecons))+
+  geom_boxplot()
+```
+
+```{r}
+hist(subset_clean$total_hecons)
+```
+Now the distribution looks much better^ so now we are ready to check the assumptions
+
+Now let's check the assumptions
+Assumption 1. Independence: Observations should be independent of each other. The data is independent as each observation is a unique person (Assumption 1 is met)
+
+Assumption 2. Homogeneity of variances. 
+Let's check this assumption. For this we are going to run a Levene's test.
+
+```{r}
+leveneTest(subset_clean$total_hecons ~ subset_clean$region)
+```
+
+
+ The variances are equal as the p-value is greater than .05 meaning that the assumption is met for the test.
+ 
+ 
+ 
+ Assumption 3. Normality of the residuals 
+ Let's check it by running an ANOVA test and then checking the residuals
+ 
+```{r}
+aov.put <- aov(subset_clean$total_hecons ~ subset_clean$region)
+```
+ 
+ 
+```{r}
+plot(aov.put, 2)
+```
+ The distribution seems practically normal6 there are practically no outliers there
+ 
+ 
+ Let's run the shapiro test for normality
+ 
+```{r}
+shapiro.test(aov.put$residuals)
+```
+ 
+ It can be seen that the p-value is less than 0.05, though it is quite close to it, so we will run both tests parametric and non-parametric test
+ 
+ 
+```{r}
+oneway.test(subset_clean$total_hecons ~ subset_clean$region, var.equal = T)
+```
+ As it can be seen the result shows that the p-value is less that 0.05, meaning that there is the difference in means of total_hecons between the groups.
+ 
+ Meaning that the null hypothesis is rejected.
+ 
+ 
+ Now let's check the effect size
+ 
+```{r}
+TukeyHSD(aov.put)
+```
+ Statistically Significant Comparisons (p < 0.05)
+ 
+ 
+ North Caucasus Federal District vs. Moscow
+diff = 2.423, p = 0.01397
+Interpretation: People from the North Caucasus Federal District have significantly higher health anxiety than those from Moscow.
+
+Northwestern Federal District vs. North Caucasus Federal District
+diff = -2.827, p = 0.01392
+Interpretation: People from the Northwestern Federal District have significantly lower health anxiety than those from the North 
+Caucasus Federal District.
+
+Saint-Petersburg vs. North Caucasus Federal District
+diff = -2.507, p = 0.02352
+Interpretation: People from Saint-Petersburg have significantly lower health anxiety than those from the North Caucasus Federal District.
+
+Ural Federal District vs. North Caucasus Federal District
+diff = -2.260, p = 0.04434
+Interpretation: People from the Ural Federal District have significantly lower health anxiety than those from the North Caucasus Federal District.
+ 
+Let's check the effect size
+```{r}
+anova_stats(aov.put)
+```
+
+ 
+The effect is rather small maening that actually the region does not play a crucial role in the level of health anxiety.
+
+
+
+Now, let's run a non-parametric test
+
+```{r}
+kruskal.test(subset_clean$total_hecons, subset_clean$region)
+```
+
+ 
+Kruskal test shows that there is a statistically significant difference between the groups, meaning that we reject the null hypothesis.
+ 
+ Now let's run a post hoc test
+ 
+```{r}
+dunn_test(subset_clean, total_hecons ~ region)
+```
+ Significant Differences (p < 0.05, assuming):
+ 
+North Caucasus Federal District фтв Other Regions:
+
+Higher anxiety than:
+Northwestern Federal District (statistic = -3.49)
+Saint-Petersburg (-3.47)
+Siberian Federal District (-2.51)
+Southern Federal District (-2.28)
+Ural Federal District (-3.17)
+Volga Federal District (-2.98)
+Lower anxiety than:
+Central Federal District (3.34)
+Moscow (3.98)
+
+Interpretation: People in the North Caucasus Federal District report significantly higher health anxiety compared to most other regions.
+
+
+Moscow фтв Other Regions:
+
+Higher anxiety than:
+North Caucasus Federal District (3.98)
+Siberian Federal District (2.04)
+Southern Federal District (2.25)
+Volga Federal District (1.79)
+Interpretation: Moscow residents show significantly higher anxiety than several regions but lower than North Caucasus.
+Non-Significant Differences (p > 0.05, assuming):
+Most comparisons involving Far Eastern Federal District, Ural Federal District, and Volga Federal District show small z-scores (near 0), suggesting no strong evidence of differences in health anxiety.
+Example:
+Central Federal District vs. Ural Federal District (-0.08)
+Siberian Federal District vs. Southern Federal District (0.27)
+
+
+Conclusion:
+
+The Dunn’s test supports H₁, revealing significant regional differences in health anxiety.
+North Caucasus Federal District stands out with consistently higher anxiety than most regions.
+Moscow also shows higher anxiety than some, but not as extreme as North Caucasus.
+Other regions (e.g., Far Eastern, Ural, Volga) do not differ significantly from each other.
+ 
+
+
+
+Now let's calculate the effect size
+```{r}
+kruskal_effsize(subset_clean, total_hecons ~ region)
+```
+
+ 
+ 
+ 
+ The effect size is again small, meaning that though there is a difference between the groups, it can be stated that the region does not play the key role in the levels of health anxiety as the effect size is small
+ 
+ 
+ 
+ The conclusion
+In summary, we accept H₁ and conclude that health anxiety levels vary across Russian regions, with the North Caucasus Federal District reporting the highest levels. However, since the effect size is small, these differences, while statistically detectable, may not be large enough to be sociologically impactful without further contextual analysis.

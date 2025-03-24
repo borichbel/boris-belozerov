@@ -1,0 +1,53 @@
+---
+title: "HW2"
+output: html_document
+date: "2025-03-06"
+---
+
+
+```{r}
+brown <- c(26, 6, 12, 9, 12, 15)
+blue <- c(14, 8, 11, 15, 15, 7)
+colors <- c('red', 'blue', 'green', 'yellow', 'orange', 'brown')
+data <- cbind(brown, blue)
+rownames(data) <- colors
+
+```
+
+
+```{r}
+sum(brown)
+```
+
+```{r}
+sum(blue)
+```
+
+
+```{r}
+chisq.test(data)
+```
+Since the p-value is greater than 0.05, we can conclude that there is no statistically significant difference between the blue and brown packages. This implies that the color distributions in both packages are essentially the same.
+
+```{r}
+yellow <- c(9, 5, 6, 6, 1, 4)
+data <- cbind(data, yellow)
+data
+```
+
+```{r}
+sum(yellow)
+```
+
+
+```{r}
+chisq.test(data)
+```
+
+The p-value is 0.2056, which is bigger than 0.05. This means we cannot say there is a real difference in the colors of the three M&M packages. So, the colors are likely the same in all three.
+
+
+```{r}
+chisq.test(data)$expected
+```
+The problem with the chi-square approximation occurs because some categories have too few observations. For the chi-square test to work properly, the expected values in each category should generally be more than 5. A possible way to fix this is to collect more data, especially for the yellow package. Even with this issue, the results show that there is no statistically significant difference between the categories. This means the distribution of candy colors is likely the same across all the packages.

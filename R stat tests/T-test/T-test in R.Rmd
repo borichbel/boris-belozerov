@@ -1,0 +1,300 @@
+---
+title: "Practice HW 3"
+output: html_document
+date: "2025-03-16"
+---
+
+```{r}
+library(tidyverse)
+library(rstatix)
+library(effsize)
+library(psych) 
+library(car)
+library(DescTools) 
+library(sjstats)
+```
+
+Here is your HW 3 for DA practice.
+
+1. Use the 'Medinfo' dataset from the Canavas data folder. This dataset contains survey data on individuals' searches for health information on the internet. 
+
+```{r}
+df <- read.csv('Medinfo.csv', sep=";")
+```
+
+
+2. Check the structure and data types of the dataset. Change the variable classes if necessary. 
+
+```{r}
+str(df)
+```
+It can be seen that the categorical variables are seen as 'character' instead of a factor. But at this moment, I will not transform the whole data set. I will transform only the variables that I will need for the analysis.
+
+
+3. Plot the relationship between health concerns (total_hecons - how worried people are about their health) and fear of medical procedures (total_med - index of fear of vaccination, examination, medication taking etc.). Interpret the output.
+
+```{r}
+hecons_med_subset <- df %>%
+  select(total_hecons, total_med)
+```
+
+```{r}
+range(hecons_med_subset$total_hecons)
+range()
+```
+
+```{r}
+ggplot(hecons_med_subset, aes(x = total_hecons, y = total_med))+
+  geom_point()
+```
+As the values show us the total value of the variables that were output_hecons/output_med. It can be seen that the values are create the lines, which means that no relationship seems to be seen from the first glance on the graph. The possible problem with the following graph is that the measurements are different for total_hecons and total_med. Total_med had more variables to be formed from, meaning that the proportion may have some inequality in weights of the variables. 
+
+
+4. Obtain descriptive statistics for participants' health concerns (total_hecons). Plot its histogram. 
+```{r}
+describe(hecons_med_subset$total_hecons)
+```
+
+
+```{r}
+hist(hecons_med_subset$total_hecons)
+```
+It can be seen that the data seems to be normal from the look at the histogram and the look at the descriptive stats. Mean (20.14) and median(20) are practically the same. Kurtosis and skewness are close to zero.
+
+
+
+5) Calculate mean differences in health concerns between (1) males and females (variable OUTPUT.sex)
+
+To complete this task T-test should implemented as it allows to calculate the mean differences between the means.
+
+Before we start, let's create a subset for the convenience with two variables total_hecons and OUTPUT.sex and the we will look at the descriptive statistics
+
+```{r}
+hecons_gender_subset <- df %>%
+  select(total_hecons, OUTPUT.sex)
+```
+
+We will rename the variable with the gender for the convenience
+```{r}
+names(hecons_gender_subset)[names(hecons_gender_subset) == "OUTPUT.sex"] <- "gender"
+```
+
+Now let's transform the gender variable into factor
+```{r}
+hecons_gender_subset$gender <- as.factor(hecons_gender_subset$gender)
+```
+
+```{r}
+levels(hecons_gender_subset$gender)
+```
+
+
+Now let's check the descriptive statistics by groups
+```{r}
+describeBy(hecons_gender_subset, group = hecons_gender_subset$gender)
+```
+It can be seen from the table that the means of 2 groups tend not to be close to each other. 
+
+Now let's create a boxplot to see the data distrbution by gorups
+```{r}
+ggplot(hecons_gender_subset, aes(x=gender, y=total_hecons))+
+  geom_boxplot()
+```
+It seems that male respondents tend to have fewer health concern indices.
+
+
+Now let's get back to the test
+
+RQ, H0 and H1:
+
+Let's state the research question, null hypothesis and alternative hypothesis for the following analysis to be carried out.
+
+RQ: Is there any statistically significant mean difference in health concerns between the male and female respondents?
+
+H0: There is no statistically significant mean difference in health concerns between the male and female respondents.
+H1: There is a statistically significant mean difference in health concerns between the male and female respondents.
+
+
+Before we carry out the T-test, we need to see if the assumptions for the test are met. If not, we will make corrections into the test and will opt for the non-parametric test.
+
+
+Assumption 1. The observations should be independent. It is met as all observations represent different people.
+
+
+Assumption 2. The normality of the data.
+
+
+We have checked before the descriptive statistics and it seemed from the histogram that the data is normal.
+
+Histogram:
+```{r}
+hist(hecons_gender_subset$total_hecons)
+```
+
+```{r}
+describe(hecons_gender_subset$total_hecons)
+```
+
+Kurtosis and skewness are also close to ero which makes it seem as if the data is normal
+
+Now let's run a Shapiro-Wilk test to check the normality.
+```{r}
+shapiro.test(hecons_gender_subset$total_hecons)
+```
+The p-value is less than .05 so the Shapiro-Wilk test results suggests that the data is not normal. However, the test is quite strict so we will run a parametric test and then we will recheck the results with the non-parametric test as the look at the histogram, skewness and kurtosis suggested that the data is close to normal. 
+
+
+So we can state the assumption is partially met.
+
+Assumption 3. Homogeneity of the variances. 
+
+To check the homogeneity of the variances, we will run Levene's test
+```{r}
+leveneTest(hecons_gender_subset$total_hecons ~ hecons_gender_subset$gender)
+```
+The p-value is much larger than .05, so we can suggest that there is a homogeneity of variances across the genders
+
+So, the assumption is met.
+
+
+Now, let's run a parametric T-test
+```{r}
+t.test(hecons_gender_subset$total_hecons ~ hecons_gender_subset$gender, var.equal = T)
+```
+The T-test suggests that there is indeed a statistically significant difference in means between the groups as the p-values is smaller than .05. 
+
+Now we can simply calculate the differences between the means
+```{r}
+round(as.numeric(t.test(hecons_gender_subset$total_hecons ~ hecons_gender_subset$gender, var.equal = T)$estimate[1] - t.test(hecons_gender_subset$total_hecons ~ hecons_gender_subset$gender, var.equal = T)$estimate[2]), 2)
+
+```
+The difference between the indices is equal to 1.05. Which seems that there is a small difference in means between the health concern index between the female and male respondents, with females having higher level of health concern
+
+
+Now let's see the effect size for the t-test. For this, we will need to obtain the Cohen's d estimate
+```{r}
+cohen.d(total_hecons ~ gender, data = hecons_gender_subset)
+```
+The effect is small
+
+
+Now let's recheck the results on the non-parametric test as the assumption of normality is only partially met
+
+For this, we will run Wilcoxon's test
+```{r}
+wilcox.test(hecons_gender_subset$total_hecons ~ hecons_gender_subset$gender)
+```
+It shows that there is a statically significant difference between the mean ranks among the female and male respondents.
+
+
+Now let's check the effect size
+
+```{r}
+rstatix::wilcox_effsize(total_hecons ~ gender, data = hecons_gender_subset)
+```
+Effect size is again small.
+
+
+Conclusion: 
+
+We can reject the null hypothesis and state that there is a statistically significant difference in the means of level of health concern among the female and male respondents. The effectsize is small.
+
+The mean values:
+Female - 20.56663 
+Male -  19.51818 
+
+The difference is - 1.05
+
+Females tend to have a bit higher level of health concern, though the difference is not big.
+
+
+
+
+
+
+6. Calculate mean differences in health concerns between (2) those who use YouTube and those who do not (variable YouTube). 
+
+
+Before we start, let's create a subset for convenience
+```{r}
+hecons_youtube_subset <- df %>%
+  select(total_hecons, YouTube)
+```
+
+
+Now, let's check the structure of the data.
+```{r}
+str(hecons_youtube_subset)
+```
+To analyze it, we need to transform youtube variable into a factor
+
+```{r}
+hecons_youtube_subset$YouTube <- as.factor(hecons_youtube_subset$YouTube)
+```
+
+Let's check the levels of the variable
+```{r}
+levels(hecons_youtube_subset$YouTube)
+```
+
+The data seems fine now, so we can start the analysis. We will conduct a t-test as well here as well and then we will recheck the results on non-parametric test, as the data was not normal.
+
+At first, let'st state the research question, null hypothesis and alternative hypothesis.
+
+RQ: Is there any statistically significant difference in the means of level of health concern among the repondents who use YouTube and those who do not?
+
+H0: There is no statistically significant difference in the means of level of health concern among the repondents who use YouTube and those who do not.
+
+H1: There is a statistically significant difference in the means of level of health concern among the repondents who use YouTube and those who do not.
+
+
+
+Now, let's start the analysis
+
+
+Let's create boxplots to see the data
+```{r}
+ggplot(hecons_youtube_subset, aes(x=YouTube, y=total_hecons))+
+  geom_boxplot()
+```
+The boxplot seems to show no difference in means between the level of health concerns between those who use youtube and those who do not.
+
+
+Let's also see the discriptive stats among two groups
+```{r}
+describeBy(hecons_youtube_subset, group = hecons_youtube_subset$YouTube)
+```
+
+Mean and median seem to be the same among 2 groups. Though, there are practically 2 more times people who use YouTube than those who do not (No(n=498), Yes(n=855)).
+
+
+Now let's see the assumption on homogeneity of variances across the groups
+
+```{r}
+leveneTest(hecons_youtube_subset$total_hecons ~ hecons_youtube_subset$YouTube)
+```
+Levene's test shows that the variances are equal as the p-value is higher than .05
+
+
+So the assumption is met. Other 2 assumptions are met from the previous test. The data is close to normal (recheck on non-parametric test is needed) and independent
+
+Now, let's run the T-test
+```{r}
+t.test(hecons_youtube_subset$total_hecons ~ hecons_youtube_subset$YouTube, var.equal = T)
+```
+
+The p-value is higher than .05, so it means that we cannot reject the null-hypothesis, meaning that there is no statistically significant difference between the means of level of health concern among the people who use YouTube and those who do not
+
+Now, let's recheck the results on non-parametric test Wilcoxon's Test
+```{r}
+wilcox.test(hecons_youtube_subset$total_hecons ~ hecons_youtube_subset$YouTube)
+```
+The p-value here is even higher, meaning that we still cannot reject the null hypothesis.
+
+
+Conclusion:
+The null hypothesis is not rejected.
+There is no statistically siginificant difference in means of level of health concern between the people who use YouTube and those who do not. The mean for 2 groups is around 20.
+
+
+
