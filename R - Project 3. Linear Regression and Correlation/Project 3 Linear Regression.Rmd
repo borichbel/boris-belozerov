@@ -1,0 +1,887 @@
+---
+title: "Project 3"
+output:
+  html_document: default
+  pdf_document: default
+date: "2025-05-05"
+---
+
+
+Boris Belozerov 
+
+
+### Introduction
+Life satisfaction is a key component of subjective well-being, reflecting how individuals evaluate their lives as a whole. Numerous factors contribute to life satisfaction, including physical health, social relationships, lifestyle choices, and media consumption. Research has shown that these elements not only shape individual well-being but also influence broader societal trends. Understanding the relationship between these factors and life satisfaction is essential for developing strategies to improve quality of life across diverse populations. This literature review explores the impact of health, social interactions, alcohol consumption, and news consumption on life satisfaction. By examining existing studies, this review aims to identify key drivers of well-being and provide insights into the ways individuals can enhance their happiness and life satisfaction. Though, there is a certain gap in understanding what factors are associated with levels of life satisfaction in the UK
+
+***Research question: What factors are associated with level of life satisfaction in the UK?***
+
+
+There have been some studies made across the world in terms of life satisfaction. This research is going to be aimed at the UK, using the ESS round 11 Dataset for the following analysis
+
+### Literature review and Hypotheses statement 
+
+The studies revealed a strong positive correlation between health status and the level of subjective well-being. In a study conducted on a sample of 19,499 Iranian adults, self-rated health was shown to be significantly related to happiness and life satisfaction (Mohammadi et al., 2022). These data indicate that health is a key resource that provides an opportunity to realize life goals and maintain a high quality of life. Thus, the following hypothesis can be formulated
+
+**H1: The higher the level of subjective wellbeing is, the higher the level of life satisfaction is.**
+
+Studies analyzing the relationship between the frequency of meetings with friends and life satisfaction show that regular meetings (several times a week) with friends are significantly correlated with higher levels of life satisfaction compared to infrequent or absent contacts. This suggests that maintaining active social ties improves emotional well-being and overall quality of life (Degges-White & Kepic, 2020).
+This effect can be explained in terms of social support and social integration theories, which emphasize the role of close relationships in reducing stress, increasing a sense of belonging, and enhancing psychological resilience. Thus, the following hypothesis can be formulated
+
+**H2: The more often a person meets and interacts with friends, the higher their level of life satisfaction is. **
+
+Examining the relationship between alcohol consumption and life satisfaction, a study was analyzed that examined the relationship between alcohol consumption and life satisfaction among university students. Results showed that students who consumed hazardous alcoholic beverages showed lower life satisfaction compared to those who consumed low-risk alcohol. The authors used linear regression models and found a significant negative relationship between higher alcohol use and life satisfaction (Sæther et al., 2019). Thus, the following hypothesis can be formulated:
+
+**H3: The more frequently a person drinks alcohol, the lower their level of life satisfaction.**
+
+Moreover, in the research it is going to be tested if there is an interaction effect of alcohol consumption on the level of subjective wellbeing. Thus, the following additional hypothesis can be formulated.
+
+**H3.1: The frequency of alcohol consumption have an interactive effect on subjective well-being, such that higher levels of frequency of alcohol consumption and lower levels of subjective well-being are associated with a significant decrease in life satisfaction. Specifically, individuals who consume alcohol more frequently and report lower health will report lower levels of life satisfaction compared to those with less frequent alcohol consumption. **
+
+Studies of the correlation between news consumption and life satisfaction have shown that more frequent consumption of news (especially political or world news) is associated with negative effects on the development of mental well-being over time, including life satisfaction. The authors used latent growth curve modeling and showed that with each additional hard news program viewed per week, growth in mental well-being decreased significantly. The findings suggest that frequent exposure to hard news may decrease life satisfaction, while soft news may have a nonsignificant positive impact (Boukes & Vliegenthart, 2017).
+
+**H4: The higher the frequency of news consumption, the lower the level of life satisfaction is.**
+
+
+Recent longitudinal research demonstrates that life satisfaction tends to decline in the final years of life, a phenomenon known as “terminal decline.” For example, Gerstorf et al. (2008a) found that in a 12-year study of very old adults, life satisfaction remained relatively stable until the last four years before death, after which it declined sharply. This decline was more strongly linked to proximity to death than to chronological age itself (Gerstorf et al., 2008a).
+Further evidence from a large-scale German panel study confirmed these findings, showing that the rate of decline in life satisfaction accelerates as individuals approach death, and this effect is particularly pronounced in the oldest-old (Gerstorf et al., 2008b). These declines are only partially explained by physical health or cognitive decline, suggesting that psychosocial factors such as loss of autonomy, bereavement, and social isolation contribute significantly (Gerstorf et al., 2008a; Gerstorf et al., 2008b).
+Similarly, a recent systematic review and meta-analysis found that depression, reduced physical capability, and lack of social support are associated with lower life satisfaction in older adults (Sulandari et al., 2024). Large-scale U.S. studies also report that after age 75, life satisfaction tends to decrease, especially among those experiencing health problems or the loss of a spouse (Hudomiet et al., 2020).
+In summary, the evidence indicates that while life satisfaction may be stable in early old age, it typically declines in advanced old age, especially in the years immediately preceding death (Gerstorf et al., 2008a; Gerstorf et al., 2008b; Hudomiet et al., 2020; Sulandari et al., 2024).
+
+Thus, the following hypothesis can be formulated.
+
+**H5: The older the person is, the lower the level of life satisfaction is.**
+
+
+
+
+
+
+
+In the ESS dataset the following variables are going to be used for the analysis.
+
+### Variables
+
+The following variables will be used in this study, based on the data from the ESS dataset. These variables are operationalized and measured using specific scales, and we will employ linear regression and correlational analysis to test the hypotheses.
+
+1. **nwspol (The frequency of news consumption)**
+
+   * **Definition:** The amount of time spent on a typical day watching, reading, or listening to news about politics and current affairs.
+   * **Scale:** Time in minutes (measured in minutes).
+
+     * Categories:
+
+       * 7777 – Refusal
+       * 8888 – Don't know
+       * 9999 – No answer
+
+
+2. **stflife (Satisfaction with life)**
+
+   * **Definition:** Respondents' general satisfaction with life, where 0 indicates "extremely dissatisfied" and 10 indicates "extremely satisfied."
+   * **Scale:** 0 to 10, where:
+
+     * 0 – Extremely dissatisfied
+     * 1-9 – Increasing levels of satisfaction
+     * 10 – Extremely satisfied
+     * 77 – Refusal
+     * 88 – Don't know
+     * 99 – No answer
+
+
+3. **health (Subjective general health)**
+
+   * **Definition:** Respondents' self-assessment of their general health.
+   * **Scale:** Ordinal scale ranging from 1 to 5:
+
+     * 1 – Very good
+     * 2 – Good
+     * 3 – Fair
+     * 4 – Bad
+     * 5 – Very bad
+     * 7 – Refusal
+     * 8 – Don't know
+     * 9 – No answer
+
+
+4. **alcfreq (Alcohol consumption frequency)**
+
+   * **Definition:** The frequency of alcohol consumption in the last 12 months.
+   * **Scale:** Ordinal scale ranging from 1 to 7:
+
+     * 1 – Every day
+     * 2 – Several times a week
+     * 3 – Once a week
+     * 4 – 2-3 times a month
+     * 5 – Once a month
+     * 6 – Less than once a month
+     * 7 – Never
+     * 77 – Refusal
+     * 88 – Don't know
+     * 99 – No answer
+
+
+5. **agea (Age of respondent)**
+
+   * **Definition:** The age of the respondent, calculated based on their date of birth.
+   * **Scale:** Continuous, in years.
+
+6. **sclmeet (Frequency of social meetings with friends, relatives, or colleagues)**
+
+   * **Definition:** The frequency with which the respondent meets socially with friends, relatives, or colleagues.
+   * **Scale:** Ordinal scale ranging from 1 to 7:
+
+     * 1 – Never
+     * 2 – Less than once a month
+     * 3 – Once a month
+     * 4 – Several times a month
+     * 5 – Once a week
+     * 6 – Several times a week
+     * 7 – Every day
+     * 77 – Refusal
+     * 88 – Don't know
+     * 99 – No answer
+
+
+### Hypotheses
+
+1. **H1:** The higher the level of subjective wellbeing, the higher the level of life satisfaction.
+2. **H2:** The more often a person meets and interacts with friends, the higher their level of life satisfaction.
+3. **H3:** The more frequently  a person drinks alcohol, the lower their level of life satisfaction.
+4. **H3.1:** The frequency of alcohol consumption have an interactive effect on subjective well-being, such that higher levels of frequency of alcohol consumption and lower levels of subjective well-being are associated with a significant decrease in life satisfaction. Specifically, individuals who consume alcohol more frequently and report lower health will report lower levels of life satisfaction compared to those with less frequent alcohol consumption. 
+5. **H4:** The higher the frequency of news consumption, the lower the level of life satisfaction.
+6. **H5**: The older the person is, the lower the level of life satisfaction is.
+
+We will test these hypotheses using **linear regression analysis** and **correlational analysis**, examining the relationship between the predictors (health, social meeting frequency, alcohol consumption, and news consumption) and the outcome variable (life satisfaction).
+
+
+Before we start the analysis, the variables will need some transformations beforehand. We will examine each variable and make some manipulations with them in order to conduct a proper linear regression and correlational analyses.
+
+
+
+```{r setup, include=FALSE} 
+knitr::opts_chunk$set(warning = FALSE, message = FALSE) 
+```
+
+```{r}
+library(tidyverse)
+library(rstatix)
+library(effsize)
+library(psych) 
+library(car)
+library(DescTools) 
+library(sjstats)
+library(sjPlot)
+library(corrplot)
+```
+
+
+### Preliminary data transformation
+
+At first, we are going to upload the dataset 
+
+```{r}
+df <- read_csv("ESS11_filtered.csv")
+```
+
+We are going to apply the filter of the UK and will select only the variables, described in the operationalized definitions sections. As we are going to focus only on them during the analysis.
+
+
+```{r}
+df_filtered <- df %>%
+  select(nwspol, stflife, health, alcfreq, agea, sclmeet)
+```
+
+
+Let's have a look at the data.
+
+```{r}
+str(df_filtered)
+```
+We will need to remove the NA's/missing values/refusals to answers as they are not representative for the analysis.
+```{r}
+df_filtered <- df_filtered %>%
+  filter(!(nwspol %in% c(7777,8888, 9999)) & stflife %in% c(0:10) & health %in% c(1:5) & !(alcfreq %in% c(77,88,99)) & agea != 999 & !(sclmeet %in% c(77,88,99)))
+```
+
+***Alcohol consumption variable***
+```{r}
+table(df_filtered$alcfreq)
+```
+
+We have a problem with the following scale as here the higher the value, the lower the level of alcohol consumption is. So we will reverse and we will treat it as factor.
+
+```{r}
+df_filtered$alcfreq <- as.factor(8-df_filtered$alcfreq)
+```
+
+
+For our future analysis we will need to treat it as binary categorical variable. We are simplifying the measures, so that 
+     * 3 – Once a month
+     * 2 – Less than once a month
+     * 1 – Never
+Will be considered as a not drinking person
+
+And the following categories will be considered as a drinking person
+
+    * 4 – Several times a month
+     * 5 – Once a week
+     * 6 – Several times a week
+     * 7 – Every day
+
+
+```{r}
+levels(df_filtered$alcfreq) <- c("does not drink", "does not drink", "does not drink", "drinks", "drinks", "drinks", "drinks")
+```
+
+Now this variable has the following ditribution of the categories
+
+```{r}
+table(df_filtered$alcfreq)
+```
+
+```{r}
+ggplot(df_filtered, aes(x=alcfreq, fill=alcfreq))+
+  geom_bar()+
+  labs(x = "Does the person drink alcohol", y = "Quantity of the respondents")+
+  scale_fill_brewer(palette = "Set1")+
+  theme_minimal()
+```
+As it can be seen from the plot, there are slightly more people who drink than those who do not. The same we could have seen in the table
+
+***Descriptive Statistics ***
+As it is a binary categorical variable, we can give here only one descriptive statistic, which is mode
+```{r}
+Mode(df_filtered$alcfreq)
+```
+As it can be seen, there most frequent value is "Drinks".
+
+***Subjective well-being variable (health)***
+The main problem with this variable is that the smaller the value, the better the health is. We will transform this variable into a categorical one with 3 categories, so it is easier to interpret results of linear regression
+
+The scale of subjective wellbeing has the following scale. 
+
+     * 1 – Very good
+     * 2 – Good
+     * 3 – Fair
+     * 4 – Bad
+     * 5 – Very bad
+
+
+```{r}
+df_filtered$health <- as.factor(6 - df_filtered$health)
+```
+
+Now the scale is the following
+     
+      * 5 – Very good
+      * 4 – Good
+      * 3 – Fair
+      * 2 – Bad
+      * 1 – Very bad
+
+Now we will merge categories "very good" and "good"; and "bad" and "very bad", so we will have 3 categories. Bad - Fair - Good
+
+
+```{r}
+levels(df_filtered$health) <- c("bad", "bad", "fair", "good", "good")
+```
+
+So now we have the following distribution
+```{r}
+table(df_filtered$health)
+```
+
+Let's plot it with the barplot
+
+```{r}
+ggplot(df_filtered, aes(x=health, fill=health))+
+  geom_bar()+
+  labs(x = "The person thinks his health is...", y = "Quantity of the respondents")+
+  scale_fill_brewer(palette = "Set1")+
+  theme_minimal()
+```
+As it can be seen, there are many more people with self-evaluated good health than those who evaluated their health is fair or bad.
+
+**Descriptive Statistic**
+For this variable we will calculate the descriptive statistic, which is mode
+
+```{r}
+Mode(df_filtered$health)
+```
+The same can be seen through the mode, the most frequent value is 'good'.
+
+***Age of the respondent variable***
+
+**agea (Age of respondent)**
+This variable is a numeric one, so we will need to treat it differently from the previous ones.
+
+At first let's see the histogram of the age distribution
+```{r}
+
+ggplot(df_filtered, aes(x = agea)) +
+  geom_histogram(binwidth = 2, fill = "skyblue", color = "black", alpha = 0.7) +  
+  labs(
+    title = "Age Distribution of the Respondents", 
+    x = "Age", 
+    y = "Frequency"
+  ) +
+  theme_minimal() +  
+  theme(
+    plot.title = element_text(hjust = 0.5, size = 16, face = "bold"),  
+    axis.title = element_text(size = 12), 
+    axis.text = element_text(size = 10)  
+  )
+
+```
+
+As it can be seen from the histogram, the distribution is not normal and there are people of diffrent ages in the dataset (from 25 to 75)
+
+**Descriptive Statistics**
+Now let's check the descriptive stats for the age variable
+
+```{r}
+describe(df_filtered$agea)
+```
+*n:*
+There are 1,604 respondents in the dataset.
+
+*Mean:*
+The average age of the respondents is 53.53 years.
+
+*Standard Deviation (SD):*
+A value of 18.98 indicates moderate variability in age.
+
+*Median:*
+This indicates that 50% of respondents are younger than 54, and 50% are older.
+
+*Trimmed Mean:*
+The trimmed mean of 53.64 is close to the regular mean, indicating that extreme values don't heavily skew the data.
+
+*Median Absolute Deviation (MAD)*:
+A value of 23.72 shows that, on average, the data points are 23.72 years away from the median age.
+
+*Minimum (Min):*
+The youngest respondent is 15 years old.
+
+*Maximum (Max):*
+The oldest respondent is 90 years old.
+
+*Range:*
+The difference between the maximum and minimum values is 75 years, indicating a wide range of ages in the dataset.
+
+*Skewness:*
+The skewness value close to zero suggests that the distribution of age is nearly symmetric, with very little skew to the left or right.
+
+*Kurtosis:*
+The negative kurtosis value suggests that the distribution has lighter tails than a normal distribution, with fewer extreme values.
+
+
+
+***Frequency of social meetings with friends, relatives, or colleagues variable**
+   **Scale:** scale ranging from 1 to 7:
+
+     * 1 – Never
+     * 2 – Less than once a month
+     * 3 – Once a month
+     * 4 – Several times a month
+     * 5 – Once a week
+     * 6 – Several times a week
+     * 7 – Every day
+     
+In this analysis, Frequency of social meetings with friends, relatives, or colleagues is an ordinal variable with 7 distinct levels ranging from "Never" (1) to "Every day" (7). Despite the fact that this variable is inherently ordinal, we are opting to treat it as a continuous predictor in the regression model and correlation tests. This decision is based on several key considerations:
+
+While the variable is ordinal, the 7 categories represent a natural progression of increasing frequency. Each category reflects a step in the frequency scale, which can be interpreted as a continuous progression from no social meetings to daily interactions. By converting the ordinal categories to numeric values (1–7), we are simplifying the analysis without significantly losing the essence of the variable's nature.
+
+The primary concern with treating an ordinal variable as continuous is the assumption of equal intervals between categories. The difference in meaning or impact between adjacent categories may not be consistent across the entire scale. For example, the difference between "Never" and "Less than once a month" may not be the same as the difference between "Several times a week" and "Every day." To mitigate this, the analysis should acknowledge the potential for unequal intervals and interpret the results with caution. However, the dataset has given the following variable to us, we will treat it as a numeric continuous variable.     
+```{r}
+
+ggplot(df_filtered, aes(x = sclmeet)) +
+  geom_histogram(binwidth = 1, fill = "lightblue", color = "black", alpha = 0.7) +
+  labs(x = "Frequency of Social Meetings", y = "Count of Respondents") +
+  theme_minimal()
+```
+It can be seen that the distribution is skewed to left from the histogram
+
+**Descriptive statistics**
+Now let's calculate the descriptive statistics
+```{r}
+describe(df_filtered$sclmeet)
+```
+
+
+**n:**
+There are 1,604 respondents in the dataset.
+
+**Mean:**
+The average frequency of social meetings is 4.75, which suggests that, on average, respondents meet socially several times a month.
+
+**Median:**
+The median value is 5, indicating that 50% of respondents meet socially more than once a week, while the other 50% meet less frequently.
+
+**Trimmed Mean:**
+The trimmed mean of 4.84 is close to the regular mean, suggesting that extreme values (both high and low) do not heavily skew the data.
+
+**Median Absolute Deviation (MAD):**
+A value of 1.48 shows that, on average, the frequency of social meetings for respondents deviates by 1.48 units from the median.
+
+**Minimum (Min):**
+The minimum value is 1, indicating that at least one respondent never meets socially.
+
+**Maximum (Max):**
+The maximum value is 7, indicating that at least one respondent meets socially every day.
+
+**Range:**
+The difference between the maximum and minimum values is 6, indicating a moderate range in the frequency of social meetings.
+
+**Skewness:**
+The skewness value of -0.53 suggests that the distribution of social meeting frequencies is slightly negatively skewed, meaning there are more respondents who meet socially frequently than those who meet infrequently.
+
+**Kurtosis:**
+The kurtosis value of -0.6 indicates the data has lighter tails and fewer extreme values than a normal distribution.
+
+
+
+***The frequency of news consumption variable*** 
+
+It shows the amount of time spent on a typical day watching, reading, or listening to news about politics and current affairs.
+   **Scale:** Time in minutes (measured in minutes).
+
+It is a continuous variable, so we will see the histogram and descriptive statistics of it
+
+```{r}
+ggplot(df_filtered, aes(x = nwspol)) +
+  geom_histogram(binwidth = 30, fill = "lightblue", color = "black", alpha = 0.7) +
+  labs(x = "Frequency of news consumption in minutes", y = "Count of Respondents") +
+  theme_minimal()
+```
+As it can be seen from the distribution there are a lot of outliers in the dataset. There are a lot of extreme values.
+
+
+
+```{r}
+describe(df_filtered$nwspol)
+```
+
+
+**n:**
+There are 1,604 respondents in the dataset.
+
+**Mean:**
+The average frequency of news consumption is 92.89 minutes per day, indicating that, on average, respondents spend about 1.5 hours daily consuming news.
+
+**Standard Deviation (SD):**
+A value of 150.54 indicates high variability in the frequency of news consumption. This suggests that while the average time spent on news consumption is around 93 minutes, many respondents consume news either much less or much more than this average.
+
+**Median:**
+The median value is 60 minutes, indicating that 50% of respondents spend less than 60 minutes per day on news consumption, and 50% spend more.
+
+**Trimmed Mean:**
+The trimmed mean of 59.41 minutes is close to the median, suggesting that extreme values (both low and high) do not significantly skew the data.
+
+**Median Absolute Deviation (MAD):**
+A MAD of 59.3 shows that, on average, the time spent consuming news for respondents deviates by 59.3 minutes from the median.
+
+**Minimum (Min):**
+The minimum value is 0 minutes, indicating that at least one respondent does not consume news at all during the day.
+
+**Maximum (Max):**
+The maximum value is 1,439 minutes (which equals 23 hours and 59 minutes), suggesting that some respondents may spend an exceptionally large amount of time consuming news.
+
+**Range:**
+The range is 1,439 minutes, indicating a very wide distribution of news consumption times, from 0 minutes to nearly a full day.
+
+**Skewness:**
+The skewness value of 3.79 suggests a strong positive skew, meaning that the distribution of news consumption is heavily right-skewed. This indicates that while many respondents consume news for shorter periods, there are a few respondents who consume news for significantly longer periods.
+
+**Kurtosis:**
+The kurtosis value of 17.02 indicates that the distribution has heavy tails and a sharp peak. This means that there are more extreme values (both high and low) than would be expected in a normal distribution.
+
+
+It can be seen that the distribution of this variable is not normal indeed.
+
+***Level of life satisfaction***
+Scale
+
+     * 0 – Extremely dissatisfied
+     * 1-9 – Increasing levels of satisfaction
+     * 10 – Extremely satisfied
+
+We are treating Level of Life Satisfaction as a continuous variable in my analysis. Despite the fact that this variable is ordinal, we are assuming that the difference in time between each level is approximately equal, and that treating it as continuous will allow for a more straightforward analysis and interpretation in the regression model. This approach enables us to directly assess the linear relationship between level of life satisfaction and other predictors.
+Keeping in mind the potential difficulties, such as the assumption of equal intervals between categories, which may not perfectly hold. 
+
+```{r}
+ggplot(df_filtered, aes(x = stflife)) +
+  geom_histogram(binwidth = 1, fill = "lightblue", color = "black", alpha = 0.7) +
+  labs(x = "Level of life satisfaction", y = "Count of Respondents") +
+  theme_minimal()
+```
+As it can be seen from the histogram, the data is left skewed, meaning that tere are more people who feel satisfied with life than those who do not.
+
+**Descriptive Statistics**
+
+Now, let's analyze the descriptive statistics of the variable
+
+```{r}
+describe(df_filtered$stflife)
+```
+
+
+**n:**
+There are 1,604 respondents in the dataset.
+
+**Mean:**
+The average level of life satisfaction is 7.02, indicating that, on average, respondents are slightly above the middle of the satisfaction scale, with a general feeling of moderate satisfaction.
+
+**Standard Deviation (SD):**
+A value of 2.15 indicates moderate variability in life satisfaction scores. This means that respondents' satisfaction levels are spread out from the mean by about 2.15 points, reflecting a range of experiences from highly dissatisfied to highly satisfied.
+
+**Median:**
+The median value is 7, indicating that 50% of respondents report life satisfaction levels below 7, and 50% report satisfaction levels above 7. This suggests that the central tendency is balanced, with a slight lean towards satisfaction.
+
+**Trimmed Mean:**
+The trimmed mean of 7.21 is slightly higher than the regular mean, suggesting that extreme values (both low and high) do influence the data, but they don’t significantly distort the overall trend.
+
+**Median Absolute Deviation (MAD):**
+The MAD of 1.48 shows that, on average, respondents’ life satisfaction scores deviate by 1.48 points from the median, indicating a moderate spread in the data.
+
+**Minimum (Min):**
+The minimum value is 0, indicating that at least one respondent reported the lowest possible life satisfaction score, which represents "extremely dissatisfied."
+
+**Maximum (Max):**
+The maximum value is 10, indicating that at least one respondent reported the highest possible life satisfaction score, which represents "extremely satisfied."
+
+**Range:**
+The range of 10 points, from 0 to 10, reflects the full spectrum of satisfaction levels across respondents, indicating a broad variation in how satisfied people feel with their lives.
+
+**Skewness:**
+The skewness value of -0.89 suggests a negative skew, meaning that the distribution of life satisfaction scores is slightly tilted towards the higher end, with more respondents reporting satisfaction levels closer to 10 than to 0.
+
+**Kurtosis:**
+The kurtosis value of 0.63 indicates that the distributionhas a flatter peak compared to a normal distribution, with fewer extreme values.
+
+So, the distribution is normal as well.
+
+
+### Correlation analysis
+
+Now we are going to conduct a correlation analysis of the outcome variable (level of life satisfaction) with other 3 continuous variables (frequency of news consumption, age, frequency of social interactions)
+
+
+Through correlational analysis we can test the following hypotheses
+**H2:** The more often a person meets and interacts with friends, the higher their level of life satisfaction.
+**H3:** The more frequently a person drinks alcohol, the lower their level of life satisfaction.
+**H4:** The higher the frequency of news consumption, the lower the level of life satisfaction.
+**H5**: The older the person is, the lower the level of life satisfaction is.
+
+
+
+At first let's create a correlational matrix between these variables
+As we remember that all of our variables are not normally distributed, we will opt for Spearman's correlation
+
+```{r}
+
+
+
+
+cor_mat <- cor(df_filtered[, c("stflife", "sclmeet", "agea", "nwspol")], method = 'spearman')
+
+
+corrplot(cor_mat, method = "circle", type = "full", 
+         col = colorRampPalette(c("blue", "white", "red"))(200), 
+         tl.cex = 0.8, addCoef.col = "black", number.cex = 0.7)
+
+```
+It can be seen that there are some small associations between life satisfaction and the frequency of social interaction. So it seems that *H2* might be accepted, but the further correlational test is needed. Also, it can be seen that there is a small correlation between age and level of life satisfaction, which may mean that there is a positive association of age and the level of life satisfaction, which may contradict to H5. Also it can be seen that there is a positive correlation beween the frequency of receiving news and age. But for our research, these findings are not needed.
+
+So now, let's run correlational tests on the variables that seem to have a correlation between each other.
+
+It is H2 (which seems to be accepted) and H5 (which seems to be rejected)
+
+**H2: Frequency of social interactions and level of life satisfaction**
+
+Before we run a correlational test, we need to see if the linearity assumption is met
+
+```{r}
+ggplot(df_filtered, aes(x = sclmeet, y = stflife)) +
+  geom_point(aes(color = stflife), alpha = 0.7, size = 3) +  
+  labs(
+    title = "Relationship Between Social Interactions and Life Satisfaction", 
+    x = "Social Interactions (Frequency)", 
+    y = "Life Satisfaction (Level)"
+  ) +
+  theme_minimal() 
+
+```
+As it can be seen, the relationsip is not linear, so we need to opt for Spearman's rank correlation
+
+```{r}
+cor_test(data= df_filtered, stflife, sclmeet, method = "spearman")
+```
+As it can be seen the Spearman's correlation between level of life satisfaction and the frequency of social interactions is equal to 0.16 and it is statistically significant which indicates a small positive association between these variables. Meaning that it seems that *H2* can be proved through correlational analysis. 
+
+
+**H5: Age and level of life satisfaction**
+Let's also plot the relationship to see if there a linearity assumption is met
+
+```{r}
+ggplot(df_filtered, aes(x = agea, y = stflife)) +
+  geom_point(aes(color = stflife), alpha = 0.7, size = 3) +  
+  labs(
+    title = "Relationship Between Social Interactions and Life Satisfaction", 
+    x = "Age", 
+    y = "Life Satisfaction (Level)"
+  ) +
+  theme_minimal() 
+
+```
+The assumption is not met, also the variables are not normal, so we opt for Spearman's correlation
+
+
+```{r}
+cor_test(data= df_filtered, stflife, agea, method = "spearman")
+```
+It can be seen that the correlation is equal to 0.11, it is statistically significant, meaning that there is a positive association between level of life satisfaction and age. It seems that *H5* is rejected and that it is opposite that the higher the level of life satisfaction is positively correlated with the age. So people of higher ages tend to be happier. 
+
+
+And when examining the relationship between the frequency of watching news
+```{r}
+cor_test(data= df_filtered, stflife, nwspol, method = 'spearman')
+```
+It can be seen that the correlation observed in the correlational matrix is statistically insignificant
+
+### Analysis of the categorical variables
+The following hypotheses include categorical variables
+**H1:** The higher the level of subjective wellbeing, the higher the level of life satisfaction.
+**H3:** The more frequently a person drinks alcohol, the lower their level of life satisfaction.
+
+
+Now let's plot the categorical variables of subjective well being, and alcohol consumption in terms of life satisfaction
+
+```{r}
+ggplot(df_filtered, aes(x = health, y = stflife))+
+  geom_boxplot()+
+  labs(x = "Level of Subjective wellbeing", y = "Level Of Life Satisfaction")
+```
+
+It seems from the boxplots that the better the subjective wellbeing of the person is, the higher the level of life satisfactoin is.
+It seems to be proving the *H1*.
+
+Now let's plot the boxplot for alcoholo consumption and level of life satisfaction
+
+```{r}
+ggplot(df_filtered, aes(x = alcfreq, y = stflife))+
+  geom_boxplot()+
+  labs(x = "Alcohol consumption", y = "Level Of Life Satisfaction")
+```
+
+It seems through boxplot that people who do not drink tend to have lower levels of life satisfaction, which is quite surprising. It contrdicts with H3.
+
+### Linear Regression model
+
+Now, as we have analyzed the variables, we are ready to run a linear regression analysis.
+
+Our hypotheses:
+**H1:** The higher the level of subjective wellbeing, the higher the level of life satisfaction.
+**H2:** The more often a person meets and interacts with friends, the higher their level of life satisfaction.
+**H3:** The more frequently  a person drinks alcohol, the lower their level of life satisfaction.
+**H3.1:** The frequency of alcohol consumption have an interactive effect on subjective well-being, such that higher levels of frequency of alcohol consumption and lower levels of subjective well-being are associated with a significant decrease in life satisfaction. Specifically, individuals who consume alcohol more frequently and report lower health will report lower levels of life satisfaction compared to those with less frequent alcohol consumption. 
+**H4:** The higher the frequency of news consumption, the lower the level of life satisfaction.
+**H5**: The older the person is, the lower the level of life satisfaction is.
+
+We will start with simple regression models, then we will start adding categorical predictors, we will try to see how models work separately, then we will check how the interaction effect in *H3.1* works. And at the end we will create the full linear regression model.
+
+Now let's try to start with the simple linear regression models. 
+To test hypothesis H2, H4, and H5
+
+
+**H2: Level of life satisfaction and frequency of social interactions**
+
+```{r}
+model1 <- lm(stflife ~  sclmeet, data = df_filtered)
+summary(model1)
+```
+There is a statistically significant model, however Adjusted R-squared is rather small, we describe now only 3% of the variance
+
+```{r}
+plot_model(model1, type = "pred", terms = c("sclmeet"))
+```
+The graph shows that that social interactions are associated with levels of life satisfaction
+
+
+**H4: The higher the frequency of news consumption, the lower the level of life satisfaction.**
+
+```{r}
+model2 <- lm(stflife ~  nwspol, data = df_filtered)
+summary(model2)
+```
+There is no direct association of news consumption and the level of life satisfaction
+
+**H5**: The older the person is, the lower the level of life satisfaction is.
+```{r}
+model3 <- lm(stflife ~  agea, data = df_filtered)
+summary(model3)
+```
+
+There is a statistically significant model for the association of age and the level of life satisfaction. Though, the R-squared is really small and the coefficient is for age is small is well.
+
+**All numeric variables together**
+
+Now let's see how all of these numeric variables work together
+```{r}
+model4 <- lm(stflife ~  agea+sclmeet+nwspol, data = df_filtered)
+summary(model4)
+```
+Now everything is statistically significant, we can see positive association between age, frequency of social interactions and the level of life satisfaction. Also there is a negative association between news consumption and level of life satisfaction, though the R2 is better now, the model explains practically 4% of the variance of the data.
+
+Now let's try to add categorical predictors into the model
+
+Let's start with subjective wellbeing
+
+```{r}
+model5 <- lm(stflife ~  agea+sclmeet+nwspol+health, data = df_filtered)
+summary(model5)
+```
+It can be seen that this variable improved the model. Now, it explains practically 14% of the variance. The model is statistically significant and all of the variables as well.
+It is seen that people with low levels have lower levels of life satisfaction, than those who have fair level or good level
+
+Now, let's add the variable of alcohol consumption into the model
+```{r}
+model6 <- lm(stflife ~  agea+sclmeet+nwspol+health+alcfreq, data = df_filtered)
+summary(model6)
+```
+It is seen that model became slightly worse in terms of explaining the variance. Level of alcohol consumption has no association with level of life satisfaction as it is not significant in the model.
+
+Now for the H3.1, Let's check what will be if we check the interaction effect of alcohol consumption on health.
+```{r}
+model7 <- lm(stflife ~  agea+sclmeet+nwspol+health*alcfreq, data = df_filtered)
+summary(model7)
+```
+Now, we have added the interaction effect and all of the coefficients became statistically significant in the model.
+It explains variance the best (14.4%) as the Adjusted R-squared is 0.1444 
+
+Let's check if it explains the variance indeed better than model without interaction. For this we will run ANOVA test
+
+```{r}
+anova(model6, model7)
+```
+It shows that model with interaction explains the variance indeed better and the result is statistically significant. So we will opt for it
+
+
+Let's start with interpreting the **intercept**.
+When all the predictors in the model (agea, sclmeet, nwspol, health, and alcfreq) are 0, the expected value of life satisfaction (stflife) is 3.1494.
+
+**Age**
+Coefficient value (0.0177):
+For every 1-year increase in age, life satisfaction (stflife) is expected to increase by 0.0177 units, holding all other variables in the model constant.
+However, in practical terms it means that age does not play a role in predicting the level of life satisfaction as the coefficient is really small and the effect thus is small as well.
+It can mean that we cannot prove *H5*
+
+**Frequency of social interactions**
+Coefficient value (0.1756):
+For every one-unit increase in the frequency of social interactions (sclmeet), life satisfaction (stflife) is expected to increase by 0.1756 units, assuming all other variables in the model are held constant
+
+The effect, while not large, is likely to be noticeable when comparing people with high and low levels of social interaction.
+The positive coefficient suggests that people who engage in social interactions more frequently tend to report better life satisfaction, all else being equal. It can mean that *H2* is accepted
+
+**News consumption**
+Coefficient value (-0.00086)
+It means that level of life satisfaction changes by -0.00086 by each minute of daily news consumption. It can be said that the effect is rather small, though the association is negative. However, is close to zero, so it basically has practically no practical implications. So we cannot accept *H4*
+
+**Subjective wellbeing**
+Coefficients are the following
+healthfair - 1.657
+healthgood - 2.64
+
+It can be seen that these coefficients show that people who report fair health or report good health tend to have higher levels of life satisfaction compared to those who report bad levels of health.
+
+healthfair: People who report their health as fair have 1.66 units higher life satisfaction compared to those in the baseline health category. This effect is statistically significant.
+healthgood: People who report their health as good have 2.64 units higher life satisfaction compared to the baseline category. This effect is also highly statistically significant.
+
+Thus, we can say that we seem to prove *H1*.
+
+
+**Alcohol consumption**
+Coefficient value (1.1936):
+The positive coefficient of 1.1936 means that for each one-unit increase in alcohol consumption frequency, life satisfaction (stflife) is expected to increase by 1.1936 units, assuming all other variables are constant.
+
+As alcohol consumption increases (based on frequency of drinking), life satisfaction tends to increase. This suggests that, in general, people who drink more frequently report higher life satisfaction. 
+
+It is so beacause we need to take into account the health of a person. This is only true for people who have bad health. It is impossible in our model to have no health at all. That's why we are moving to explanation of interaction effect of health and alcohol consumption
+
+**Subjective wellbeing and Alcohol consumption interaction**
+healthfair:alcfreqdrinks -1.2542105 
+healthgood:alcfreqdrinks -1.2058393 
+
+It can be seen that those 
+
+```{r}
+plot_model(model7, type = "int", terms = c("health", "alcfreq"))
+```
+It can be seen that the value of alcohol  (1.1936) is true only for those who report bad health (it can be seen on the plot as well). It means that if the perosn reports bad health but drinks, it possibly mitigates their stress and they report a slighlty higher levels of life satisfaction. However if the person reports fair health and drinks the effect becomes different. It can be seen through these coefficients
+healthfair:alcfreqdrinks -1.2542105 and healthgood:alcfreqdrinks -1.2058393 that if the person drinks and has a fair health for example we will need to extract this coefficeint from alcohol consumption so it becomes sligthly negative (it is also seen on the plot).
+
+So we can say that if the person drinks but reports a fair or good level of their health their level of life satisfaction is a bit smaller than those who so not drink. (Though it is really small difference) so we can even assume that there may not be any difference at all.
+
+So, the *H3.1* and *H3* cannot be proved through our regression analysis.
+
+The difference is only visible at bad levels of subjective wellbeing. It may be due to the fact that alcohol may serve as a sedative and reduce stress by lowering activity in stress-related brain networks, particularly in individuals with lower subjective wellbeing or prior anxiety (Fayad et al., 2023).
+
+
+
+
+
+Thus, the following equation can be formulated for our regression model
+
+$$
+\text{Level of Life Satisfaction} = 3.1494 + 0.0177(\text{Age}) + 0.1756(\text{Frequency of Social Interactions}) - 0.00086(\text{Frequency of News Consumption}) + 1.6573(\text{Fair Subjective wellbeing}) + 2.6411(\text{Good Subjective wellbeing}) + 1.1936(\text{Person Drinks Alcohol}) - 1.2542(\text{Fair Subjective wellbeing} \times \text{Person Drinks Alcohol}) - 1.2058(\text{Good Subjective wellbeing} \times \text{Person Drinks Alcohol})
+$$
+
+The table of the regression models (with and without interaction)
+```{r}
+tab_model(model6, model7, show.ci = F)
+```
+
+
+
+### Conclusion
+The research set out to investigate the factors associated with life satisfaction in the UK, focusing on key variables such as health, frequency of social interactions, alcohol consumption, news consumption, and age. After analyzing these factors through various statistical methods, including correlation analysis and linear regression, several key findings emerged:
+
+***Health and Life Satisfaction (H1)***: The hypothesis that a higher level of subjective well-being leads to higher life satisfaction was **confirmed**. Individuals reporting better health tend to have higher life satisfaction, with those reporting "good" or "fair" health experiencing higher satisfaction compared to those who reported "bad" health. This supports the notion that self-perceived health is a significant driver of life satisfaction.
+
+***Social Interactions and Life Satisfaction (H2)***: A positive association was found between the frequency of social meetings and life satisfaction. Individuals who interact socially more frequently (e.g., several times a week) report higher levels of life satisfaction, supporting the hypothesis that social connections contribute significantly to emotional well-being. Thus, the hypothesis was confirmed
+
+***Alcohol Consumption and Life Satisfaction (H3)***: Contrary to the initial hypothesis that higher alcohol consumption would lower life satisfaction, the analysis found a small positive association between alcohol consumption and life satisfaction, particularly for individuals reporting poor health. This suggests that alcohol might serve as a coping mechanism for stress in certain individuals, though the effect is minimal. Thus, **H3 could not be fully substantiated**.
+
+***News Consumption and Life Satisfaction (H4)***: The hypothesis suggesting a negative relationship between frequent news consumption and life satisfaction was **not supported**. While a small negative correlation was observed, it was statistically insignificant. The coefficient in regression was very small as well. This indicates that news consumption, at least in the context of this dataset, has little to no association on life satisfaction. 
+
+***Age and Life Satisfaction (H5):*** The hypothesis that life satisfaction decreases with age was **rejected**. In fact, a slight positive association between age and life satisfaction was found, indicating that older individuals, on average, reported slightly higher life satisfaction levels. This suggests that older individuals may experience greater contentment or different factors contributing to satisfaction as they age. It is possible that U-shaped relationship may be the case (Scommegna, 2023).
+
+
+***Summary***
+The research question "What factors are associated with level of life satisfaction in the UK?" has been addressed through the analysis. Key factors influencing life satisfaction in this dataset include health, frequency of social interactions, and age. However, alcohol consumption and news consumption did not have the expected impacts on life satisfaction. Though an interesting interaction effect has been received where people with poorer subjective wellbeing indicated higher levels of life satisfaction if they drank alcohol.
+
+
+
+
+
+### List of references:
+
+Mohammadi, S., Tavousi, M., Haeri-Mehrizi, A. A., Naghizadeh Moghari, F., & Montazeri, A. (2022). The relationship between happiness and self-rated health: A population-based study of 19499 Iranian adults. PloS one, 17(3), e0265914. https://doi.org/10.1371/journal.pone.0265914
+
+Degges-White, Suzanne & Kepic, Marcela. (2020). Friendships, Subjective Age, and Life Satisfaction of Women in Midlife. Adultspan Journal. 19. 39-53. 10.1002/adsp.12086.
+
+Sæther, S. M. M., Knapstad, M., Askeland, K. G., & Skogen, J. C. (2019). Alcohol consumption, life satisfaction and mental health among Norwegian college and university students. Addictive behaviors reports, 10, 100216. https://doi.org/10.1016/j.abrep.2019.100216
+Boukes, Mark & Vliegenthart, Rens. (2017). News Consumption and Its Unpleasant Side Effect. Journal of Media Psychology. 29. 137-147. 10.1027/1864-1105/a000224.
+
+Gerstorf, D., Ram, N., Röcke, C., & Lindenberger, U. (2008a). Decline in life satisfaction in old age: Longitudinal evidence for links to distance-to-death. Psychology and Aging, 23(1), 154–168. https://doi.org/10.1037/0882-7974.23.1.154
+
+Gerstorf, D., Ram, N., Estabrook, R., Schupp, J., Wagner, G. G., & Lindenberger, U. (2008b). Life satisfaction shows terminal decline in old age: Longitudinal evidence from the German Socio-Economic Panel Study (SOEP). Developmental Psychology, 44(4), 1148–1159. https://doi.org/10.1037/0012-1649.44.4.1148
+
+Hudomiet, P., Hurd, M. D., & Rohwedder, S. (2020). The age profile of life-satisfaction after age 65 in the U.S. (NBER Working Paper No. 28037). National Bureau of Economic Research. https://doi.org/10.3386/w28037
+
+Sulandari, S., Coats, R. O., Miller, A., Hodkinson, A., & Johnson, J. (2024). Systematic review and meta-analysis of the association between physical capability, social support, loneliness, depression, anxiety, and life satisfaction in older adults. The Gerontologist, 64(11), gnae128. https://doi.org/10.1093/geront/gnae128
+
+Fayad, Z. A., Osborne, M. T., Koenig, J., et al. (2023). Reduced Stress-Related Neural Network Activity Mediates the Effect of Light/Moderate Alcohol Consumption on Cardiovascular Risk. Journal of the American College of Cardiology, 81(24), 2326-2339.
+
+Scommegna, P. (2023). Life satisfaction follows a U-shaped pattern across the working life. Population Reference Bureau. https://www.prb.org/resources/life-satisfaction-follows-a-u-shaped-pattern-across-the-working-life/
+
